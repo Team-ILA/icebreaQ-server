@@ -25,6 +25,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-modules-
 
+      - name: Install dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm install
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
