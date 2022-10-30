@@ -21,8 +21,8 @@ module.exports = {
       path: process.env.SERVER_PATH,
       "post-deploy":
         "npm install && \
-        npm run build && \
-        pm2 reload ecosystem.config.js",
+         npm run build && \
+         pm2 reload ecosystem.config.js",
     },
   },
 };

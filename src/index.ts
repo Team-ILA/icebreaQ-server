@@ -2,7 +2,7 @@ import express from "express";
 import config from "./config";
 
 const app = express();
-const port = config.SERVER_PORT;
+const port = config.PORT;
 
 app.use(express.json());
 
