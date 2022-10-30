@@ -17,8 +17,11 @@ mongoose
   .then(() => console.log("connection successful"))
   .catch((e) => console.error(e));
 
-// app.use('/users', usersRouter)
-// app.use('/quizzes', quizRouter)
+import userRouter from "./routes/userRouter";
+import quizRouter from "./routes/quizRouter";
+
+app.use("/user", userRouter);
+app.use("/quiz", quizRouter);
 
 app.listen(port, () => {
   console.log(`listening to port ${port}!`);
