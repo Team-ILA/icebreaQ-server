@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const config = require("./config");
+const config = require("./src/config");
 
 module.exports = {
   apps: [
