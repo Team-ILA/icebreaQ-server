@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up node.js
         uses: actions/setup-node@v3
         with:
@@ -20,8 +20,8 @@ jobs:
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         shell: bash
         env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
       - name: Install PM2
         run: npm i -g pm2
@@ -29,7 +29,7 @@ jobs:
       - name: Deploy to EC2
         run: pm2 deploy production
         env:
-          SERVER_USER: ${{secrets.SERVER_USER}}
-          SERVER_HOST: ${{secrets.SERVER_HOST}}
-          SERVER_PATH: ${{secrets.SERVER_PATH}}
-          PORT: ${{secrets.PORT}}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PATH: ${{ secrets.SERVER_PATH }}
+          PORT: ${{ secrets.PORT }}
