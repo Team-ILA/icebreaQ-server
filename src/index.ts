@@ -1,19 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
-import Dotenv from "dotenv";
-// import config from "../config";
-
-Dotenv.config();
-const { DB_USER, DB_PASSWORD, MONGO_URI } = process.env;
+import config from "./config";
 
 const app = express();
-const port = process.env.PORT;
+const port = config.PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 mongoose
-  .connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@${MONGO_URI}`)
+  .connect(
+    `mongodb+srv://${config.DB_USER}:${config.DB_PASSWORD}@${config.MONGO_URI}`,
+  )
   .then(() => console.log("connection successful"))
   .catch((e) => console.error(e));
 
