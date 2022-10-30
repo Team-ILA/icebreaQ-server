@@ -1,7 +1,8 @@
 import express from "express";
+import config from "../config";
 
 const app = express();
-const port = 3000;
+const port = config.SERVER_PORT;
 
 app.use(express.json());
 
