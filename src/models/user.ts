@@ -6,4 +6,4 @@ const userSchema = new mongoose.Schema({
   password: String, // Authentication 취약점으로 활용될 hash 값 보관
 });
 
-export default mongoose.model("quiz", userSchema);
+export default mongoose.model("user", userSchema);

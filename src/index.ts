@@ -10,16 +10,10 @@ app.use(express.urlencoded({ extended: false }));
 
 mongoose
   .connect(
-    `mongodb+srv://${config.DB_USER}:${config.DB_PASSWORD}@${config.MONGO_URI}`,
+    `mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@${config.MONGO_HOST}`,
   )
   .then(() => console.log("connection successful"))
   .catch((e) => console.error(e));
-
-import userRouter from "./routes/userRouter";
-import quizRouter from "./routes/quizRouter";
-
-app.use("/user", userRouter);
-app.use("/quiz", quizRouter);
 
 app.listen(port, () => {
   console.log(`listening to port ${port}!`);

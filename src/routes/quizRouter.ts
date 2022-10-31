@@ -1,18 +1,19 @@
 import express from "express";
 // import Quiz from "../models/quiz";
 
-const router = express.Router();
+const quizRouter = express.Router();
 
-router.use((req, res, next) => {
+quizRouter.use((req, res, next) => {
+  // authentiction session checking middleware
   next();
 });
 
-router.get("/", (req, res) => {
+quizRouter.get("/", (req, res) => {
   res.send("get response");
 });
 
-router.post("/", (req, res) => {
+quizRouter.post("/", (req, res) => {
   res.send("post response");
 });
 
-export default router;
+export default quizRouter;

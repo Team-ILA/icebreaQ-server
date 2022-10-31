@@ -1,18 +1,14 @@
 import express from "express";
 // import User from "../models/user";
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.use((req, res, next) => {
-  next();
-});
-
-router.get("/", (req, res) => {
+userRouter.get("/", (req, res) => {
   res.send("get response");
 });
 
-router.post("/", (req, res) => {
+userRouter.post("/", (req, res) => {
   res.send("post response");
 });
 
-export default router;
+export default userRouter;
