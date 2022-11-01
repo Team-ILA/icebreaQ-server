@@ -35,6 +35,7 @@ quizRouter.post("/", async (req, res) => {
     creator,
     QA,
     current_question: 0,
+    active_users: [],
   });
 
   try {

@@ -7,6 +7,7 @@ const quizSchema = new mongoose.Schema({
   QA: Array, // [{q: "질문1", a: ["답변1", "답변2", ...]}, {q: "질문2", a: ["답변1", "답변2", ...]}, ...]
   current_question: Number,
   published_date: { type: Date, default: Date.now },
+  active_users: Array,
 });
 
 export default mongoose.model("quiz", quizSchema);
