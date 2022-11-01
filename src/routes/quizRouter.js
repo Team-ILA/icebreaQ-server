@@ -19,7 +19,7 @@ quizRouter.post("/", async (req, res) => {
     .digest("hex");
 
   const duplicateQuiz = await Quiz.findOne({ quizId });
-  if (duplicateQuiz != null) {
+  if (duplicateQuiz !== null) {
     throw new Error("400");
   }
 
@@ -37,9 +37,11 @@ quizRouter.post("/", async (req, res) => {
     current_question: 0,
   });
 
-  newQuiz.save().catch((e) => {
-    throw new Error("500");
-  });
+  try {
+    await newQuiz.save();
+  } catch (e) {
+    throw new Error(e);
+  }
 
   res.status(201).json({ quizId });
 });
