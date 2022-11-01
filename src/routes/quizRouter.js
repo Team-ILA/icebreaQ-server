@@ -41,12 +41,24 @@ quizRouter.post("/", async (req, res) => {
     throw new Error("500");
   });
 
-  res.json({ quizId });
+  res.status(201).json({ quizId });
 });
 
-quizRouter.put("/", async (req, res) => {
+quizRouter.get("/:quizId", async (req, res) => {
+  const { quizId } = req.params;
+
+  const dbResponse = await Quiz.findOne({ quizId });
+
+  if (dbResponse === null) {
+    throw new Error();
+  }
+
+  res.status(200).json(dbResponse);
+});
+
+quizRouter.put("/:quizId", async (req, res) => {
   // express에서 req schema 확인하는 방법 찾아봐야 함 : quizID가 존재하지 않는 경우
-  const { quizId } = req.body;
+  const { quizId } = req.params;
 
   const quiz = await Quiz.findOne({ quizId });
 
@@ -67,7 +79,7 @@ quizRouter.put("/", async (req, res) => {
     },
   );
 
-  res.send("update complete");
+  res.status(200).send("update complete");
 });
 
 export default quizRouter;
