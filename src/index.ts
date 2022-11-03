@@ -28,16 +28,14 @@ mongoose
   .then(() => console.log("connection successful"))
   .catch((e) => console.error(e));
 
-app.use("/api", apiRouter);
-
 io.on("connection", (socket: Socket) => {
   socket.on("greeting", async (data: any) => {
     const { quizId, nickname } = data;
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === null) {
-      throw new Error();
+    if (quiz === (undefined || null)) {
+      throw new Error("404");
     }
 
     await socket.join(quizId);
@@ -57,8 +55,8 @@ io.on("connection", (socket: Socket) => {
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === null) {
-      throw new Error();
+    if (quiz === (undefined || null)) {
+      throw new Error("404");
     }
 
     const removeIndex = quiz.active_users.indexOf(nickname);
@@ -74,8 +72,8 @@ io.on("connection", (socket: Socket) => {
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === null) {
-      throw new Error();
+    if (quiz === (undefined || null)) {
+      throw new Error("404");
     }
 
     const currentQuestion = quiz.current_question;
@@ -92,6 +90,14 @@ io.on("connection", (socket: Socket) => {
       updatedAnswer: [...quiz.QA[currentQuestion].answer, newAnswer],
     });
   });
+});
+
+app.use("/api", apiRouter);
+
+app.use((err: any, req: any, res: any, next: any) => {
+  const { message } = err;
+  console.error(err);
+  res.status(parseInt(message)).send("error occurred");
 });
 
 httpServer.listen(port, () => {
