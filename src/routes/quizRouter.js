@@ -21,7 +21,7 @@ quizRouter.post("/", async (req, res) => {
 
     const duplicateQuiz = await Quiz.findOne({ quizId });
     if (duplicateQuiz !== undefined) {
-      return next(new Error("400"));
+      throw new Error("400");
     }
 
     const QA = questions.map((item) => {
@@ -43,9 +43,7 @@ quizRouter.post("/", async (req, res) => {
 
     res.status(201).json({ quizId });
   } catch (err) {
-    if (err) {
-      next(err);
-    }
+    next(err);
   }
 });
 
@@ -56,14 +54,12 @@ quizRouter.get("/:quizId", async (req, res, next) => {
     const dbResponse = await Quiz.findOne({ quizId });
 
     if (dbResponse === (undefined || null)) {
-      return next(new Error("404"));
+      throw new Error("404");
     }
 
     res.status(200).json(dbResponse);
   } catch (err) {
-    if (err) {
-      next(err);
-    }
+    next(err);
   }
 });
 
@@ -75,13 +71,13 @@ quizRouter.put("/:quizId", async (req, res) => {
     const quiz = await Quiz.findOne({ quizId });
 
     if (quiz === undefined) {
-      return next(new Error("404"));
+      throw new Error("404");
     }
 
     const { current_question, QA } = quiz;
 
     if (current_question >= QA.length) {
-      return next(new Error("404"));
+      throw new Error("404");
     }
 
     await Quiz.updateOne(
