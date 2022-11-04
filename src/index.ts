@@ -63,6 +63,8 @@ io.on("connection", (socket: Socket) => {
     }
 
     await Quiz.updateOne({ quizId }, { $pull: { active_users: nickname } });
+
+    io.to(quizId).emit("answer_submitted", { activeUsers: quiz.active_users });
   });
 
   socket.on("new_answer", async (data: any) => {
