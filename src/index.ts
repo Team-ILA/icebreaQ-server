@@ -46,8 +46,8 @@ io.on("connection", (socket: ISocket) => {
 
     // quidId 값에 알맞는 room에 입장(join)
     await socket.join(quizId);
-    socket["nickname"] = nickname;
-    socket["quizId"] = quizId;
+    socket.nickname = nickname;
+    socket.quizId = quizId;
 
     await Quiz.updateOne(
       { quizId },
@@ -60,8 +60,8 @@ io.on("connection", (socket: ISocket) => {
   });
 
   socket.on("disconnecting", async () => {
-    const quizId = socket["quizId"];
-    const nickname = socket["nickname"];
+    const quizId = socket.quizId;
+    const nickname = socket.nickname;
 
     if (!quizId) {
       throw new Error("400");
@@ -79,7 +79,7 @@ io.on("connection", (socket: ISocket) => {
   });
 
   socket.on("new_answer", async (data: any) => {
-    const quizId = socket["quizId"];
+    const quizId = socket.quizId;
     const { newAnswer } = data;
 
     if (!quizId) {
