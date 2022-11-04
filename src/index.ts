@@ -11,7 +11,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: "*", // 제출 전에 변경 필요할 듯
     credentials: true,
   },
 });
@@ -28,16 +28,19 @@ mongoose
   .then(() => console.log("connection successful"))
   .catch((e) => console.error(e));
 
+app.use("/api", apiRouter);
+
 io.on("connection", (socket: Socket) => {
   socket.on("greeting", async (data: any) => {
     const { quizId, nickname } = data;
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === (undefined || null)) {
+    if (quiz === undefined || quiz === null) {
       throw new Error("404");
     }
 
+    // quidId 값에 알맞는 room에 입장(join)
     await socket.join(quizId);
 
     await Quiz.updateOne(
@@ -55,13 +58,8 @@ io.on("connection", (socket: Socket) => {
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === (undefined || null)) {
+    if (quiz === undefined || quiz === null) {
       throw new Error("404");
-    }
-
-    const removeIndex = quiz.active_users.indexOf(nickname);
-    if (removeIndex === -1) {
-      throw new Error();
     }
 
     await Quiz.updateOne({ quizId }, { $pull: { active_users: nickname } });
@@ -72,11 +70,11 @@ io.on("connection", (socket: Socket) => {
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === (undefined || null)) {
+    if (quiz === undefined || quiz === null) {
       throw new Error("404");
     }
 
-    const currentQuestion = quiz.current_question;
+    const currentQuestion = quiz?.current_question;
     if (currentQuestion === undefined) {
       throw new Error();
     }
@@ -91,8 +89,6 @@ io.on("connection", (socket: Socket) => {
     });
   });
 });
-
-app.use("/api", apiRouter);
 
 app.use((err: any, req: any, res: any, next: any) => {
   const { message } = err;
