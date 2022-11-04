@@ -29,8 +29,12 @@ mongoose
   .catch((e) => console.error(e));
 
 app.use("/api", apiRouter);
+interface ISocket extends Socket {
+  nickname?: string;
+  quizId?: string;
+}
 
-io.on("connection", (socket: Socket) => {
+io.on("connection", (socket: ISocket) => {
   socket.on("greeting", async (data: any) => {
     const { quizId, nickname } = data;
 
@@ -42,6 +46,8 @@ io.on("connection", (socket: Socket) => {
 
     // quidId 값에 알맞는 room에 입장(join)
     await socket.join(quizId);
+    socket["nickname"] = nickname;
+    socket["quizId"] = quizId;
 
     await Quiz.updateOne(
       { quizId },
@@ -53,8 +59,13 @@ io.on("connection", (socket: Socket) => {
     });
   });
 
-  socket.on("leave", async (data: any) => {
-    const { quizId, nickname } = data;
+  socket.on("disconnecting", async () => {
+    const quizId = socket["quizId"];
+    const nickname = socket["nickname"];
+
+    if (!quizId) {
+      throw new Error("400");
+    }
 
     const quiz = await Quiz.findOne({ quizId });
 
@@ -64,11 +75,16 @@ io.on("connection", (socket: Socket) => {
 
     await Quiz.updateOne({ quizId }, { $pull: { active_users: nickname } });
 
-    io.to(quizId).emit("answer_submitted", { activeUsers: quiz.active_users });
+    io.to(quizId).emit("leave", { activeUsers: quiz.active_users });
   });
 
   socket.on("new_answer", async (data: any) => {
-    const { quizId, newAnswer } = data;
+    const quizId = socket["quizId"];
+    const { newAnswer } = data;
+
+    if (!quizId) {
+      throw new Error("400");
+    }
 
     const quiz = await Quiz.findOne({ quizId });
 
