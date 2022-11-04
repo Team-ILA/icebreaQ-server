@@ -36,7 +36,7 @@ io.on("connection", (socket: Socket) => {
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === undefined || quiz === null) {
+    if (!quiz) {
       throw new Error("404");
     }
 
@@ -58,7 +58,7 @@ io.on("connection", (socket: Socket) => {
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === undefined || quiz === null) {
+    if (!quiz) {
       throw new Error("404");
     }
 
@@ -70,7 +70,7 @@ io.on("connection", (socket: Socket) => {
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === undefined || quiz === null) {
+    if (!quiz) {
       throw new Error("404");
     }
 
