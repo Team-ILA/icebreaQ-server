@@ -93,7 +93,7 @@ io.on("connection", (socket: Socket) => {
 app.use((err: any, req: any, res: any, next: any) => {
   const { message } = err;
   console.error(err);
-  res.status(parseInt(message)).send("error occurred");
+  res.status(parseInt(message)).json({ status: "error occurred" });
 });
 
 httpServer.listen(port, () => {
