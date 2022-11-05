@@ -65,7 +65,7 @@ userRouter.post("/login", async (req, res, next) => {
     }
     req.session.user = email;
 
-    res.status(200).json({ message: 'login complete', email, username})
+    res.status(201).send({email, username: exuser.username})
     
   } catch (err) {   // try문에서 던진 error를 catch해서 next()로  내보냄
     next(err)
