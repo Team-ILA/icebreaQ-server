@@ -44,17 +44,17 @@ userRouter.post("/login", async (req, res, next) => {
     const { email, password } = req.body; // request의 body에서 email, username, password를 꺼내 구조분해 할당
     // email, hash(password)로 몽고디비에서 find
     // 없다면 throw new Error('400');
-    const exuser = await User.findOne({ email: email });
-    if (!exuser) {
+    const exUser = await User.findOne({ email: email });
+    if (!exUser) {
       throw new Error("400");
     }
-    const result = await bcrypt.compare(password, exuser.password);
-    if (!result) {
+    const isValidPassword = await bcrypt.compare(password, exUser.password);
+    if (!isValidPassword) {
       throw new Error("400");
     }
     req.session.user = email;
 
-    res.status(201).send({ email, username: exuser.username });
+    res.status(201).send({ email, username: exUser.username });
   } catch (err) {
     // try문에서 던진 error를 catch해서 next()로  내보냄
     next(err);
