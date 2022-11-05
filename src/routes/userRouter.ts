@@ -19,7 +19,7 @@ userRouter.post("/register", async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const duplicateUser = await User.findOne({ email: email });
-    if (!duplicateUser) {
+    if (duplicateUser) {
       throw new Error("400");
     }
 
