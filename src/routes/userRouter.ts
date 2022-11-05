@@ -1,12 +1,6 @@
-// src/routes/userRouter.ts
-
 import express from "express";
 import User from "../models/user";
-// import crypto from "crypto";
 import bcrypt from "bcrypt";
-import config, { SESSION_KEY } from "../config";
-import session from "express-session";
-import "express-session";
 
 declare module "express-session" {
   interface SessionData {
@@ -15,14 +9,6 @@ declare module "express-session" {
 }
 
 const userRouter = express.Router();
-
-userRouter.use(
-  session({
-    secret: SESSION_KEY,
-    resave: false,
-    saveUninitialized: false,
-  }),
-);
 
 userRouter.post("/register", async (req, res, next) => {
   // email validation(optional)

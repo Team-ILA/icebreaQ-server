@@ -6,6 +6,7 @@ import config from "./config";
 
 import Quiz from "./models/quiz";
 import apiRouter from "./routes/apiRouter";
+import session from "express-session";
 
 const app = express();
 const httpServer = createServer(app);
@@ -18,6 +19,13 @@ const io = new Server(httpServer, {
 
 const port = config.PORT;
 
+app.use(
+  session({
+    secret: SESSION_KEY,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
