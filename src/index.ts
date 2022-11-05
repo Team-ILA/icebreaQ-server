@@ -21,7 +21,7 @@ const port = config.PORT;
 
 app.use(
   session({
-    secret: SESSION_KEY,
+    secret: config.SESSION_KEY,
     resave: false,
     saveUninitialized: false,
   }),
