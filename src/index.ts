@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 
 mongoose
   .connect(
-    `mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@${config.MONGO_HOST}`,
+    `mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@${config.MONGO_HOST}/${config.MONGO_NAME}`,
   )
   .then(() => console.log("connection successful"))
   .catch((e) => console.error(e));
@@ -116,7 +116,7 @@ io.on("connection", (socket: ISocket) => {
   });
 });
 
-app.use((err: any, req: any, res: any, next: any) => {
+app.use((err: any, req: any, res: any) => {
   const { message } = err;
   console.error(err);
   res.status(parseInt(message)).json({ status: "error occurred" });

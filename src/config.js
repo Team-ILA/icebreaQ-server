@@ -7,6 +7,7 @@ module.exports = {
   MONGO_USER: process.env.MONGO_USER,
   MONGO_PASSWORD: process.env.MONGO_PASSWORD,
   MONGO_HOST: process.env.MONGO_HOST,
+  MONGO_NAME: process.env.MONGO_NAME,
   SHA256_SECRET: process.env.SHA256_SECRET,
-  SESSION_KEY: process.env.SESSION_KEY || '1234'
+  SESSION_KEY: process.env.SESSION_KEY || "1234",
 };

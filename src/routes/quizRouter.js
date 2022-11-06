@@ -10,7 +10,7 @@ quizRouter.use((req, res, next) => {
   next();
 });
 
-quizRouter.post("/", async (req, res) => {
+quizRouter.post("/", async (req, res, next) => {
   try {
     const { creator, questions } = req.body;
 
@@ -20,7 +20,7 @@ quizRouter.post("/", async (req, res) => {
       .digest("hex");
 
     const duplicateQuiz = await Quiz.findOne({ quizId });
-    if (duplicateQuiz !== undefined) {
+    if (duplicateQuiz) {
       throw new Error("400");
     }
 
@@ -53,7 +53,7 @@ quizRouter.get("/:quizId", async (req, res, next) => {
 
     const dbResponse = await Quiz.findOne({ quizId });
 
-    if (dbResponse === (undefined || null)) {
+    if (!dbResponse) {
       throw new Error("404");
     }
 
@@ -63,14 +63,14 @@ quizRouter.get("/:quizId", async (req, res, next) => {
   }
 });
 
-quizRouter.put("/:quizId", async (req, res) => {
+quizRouter.put("/:quizId", async (req, res, next) => {
   try {
     // express에서 req schema 확인하는 방법 찾아봐야 함 : quizID가 존재하지 않는 경우
     const { quizId } = req.params;
 
     const quiz = await Quiz.findOne({ quizId });
 
-    if (quiz === undefined) {
+    if (!quiz) {
       throw new Error("404");
     }
 
