@@ -63,9 +63,11 @@ userRouter.post("/login", async (req, res, next) => {
     if (!isValidPassword) {
       throw new Error("400");
     }
-    req.session.user = { email, username };
 
-    res.status(201).send({ email, username });
+    const userInfo = { email, username };
+
+    req.session.user = userInfo;
+    res.status(201).send(userInfo);
   } catch (err) {
     next(err);
   }
