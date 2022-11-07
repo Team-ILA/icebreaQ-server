@@ -3,12 +3,14 @@ import User from "../models/user";
 import bcrypt from "bcrypt";
 import { body, validationResult } from "express-validator";
 
+export interface IUser {
+  email: string;
+  username: string;
+}
+
 declare module "express-session" {
   interface SessionData {
-    user: {
-      email: string;
-      username: string;
-    };
+    user?: IUser;
   }
 }
 
