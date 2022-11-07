@@ -6,13 +6,17 @@ import config from "../config";
 const quizRouter = express.Router();
 
 quizRouter.use((req, res, next) => {
-  // authentiction session checking middleware
-  next();
+  if (req.session.user) {
+    req.user = req.session.user;
+    next();
+  } else {
+    next(new Error("401"));
+  }
 });
 
 quizRouter.post("/", async (req, res, next) => {
   try {
-    const { creator, questions } = req.body;
+    const { questions } = req.body;
 
     const quizId = crypto
       .createHmac("sha256", config.SHA256_SECRET)
@@ -33,7 +37,7 @@ quizRouter.post("/", async (req, res, next) => {
 
     const newQuiz = new Quiz({
       quizId,
-      creator,
+      creator: req.session.user,
       QA,
       current_question: 0,
       active_users: [],
