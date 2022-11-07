@@ -18,10 +18,15 @@ quizRouter.post(
   "/",
   [
     body("questions").isArray(),
+    body("questions.*").isString(),
     body("title").isString(),
     body("limit").isNumeric(),
   ],
-  async (req, res, next) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).send({ errors: errors.array() });
@@ -37,7 +42,7 @@ quizRouter.post(
         throw new Error("500");
       }
 
-      const QA = questions.map((item) => {
+      const QA = questions.map((item: string) => {
         return {
           question: item,
           answer: [],
@@ -46,7 +51,7 @@ quizRouter.post(
 
       const newQuiz = new Quiz({
         quizId,
-        creator: req.session.user.email,
+        creator: req.user.email,
         QA,
         current_question: 0,
         active_users: [],
