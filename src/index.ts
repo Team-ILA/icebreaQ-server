@@ -2,8 +2,9 @@ import express from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import mongoose from "mongoose";
-import config from "./config";
+import cors from "cors";
 
+import config, { ALLOWED_ORIGINS } from "./config";
 import Quiz from "./models/quiz";
 import apiRouter from "./routes/apiRouter";
 import session from "express-session";
@@ -19,6 +20,12 @@ const io = new Server(httpServer, {
 
 const port = config.PORT;
 
+const corsOptions = {
+  origin: ALLOWED_ORIGINS.split(","),
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(
   session({
     secret: config.SESSION_KEY,
