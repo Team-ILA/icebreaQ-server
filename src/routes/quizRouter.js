@@ -1,7 +1,6 @@
 import express from "express";
 import Quiz from "../models/quiz";
 import crypto from "crypto";
-import config from "../config";
 
 const quizRouter = express.Router();
 
@@ -18,14 +17,12 @@ quizRouter.post("/", async (req, res, next) => {
   try {
     const { questions } = req.body;
 
-    const quizId = crypto
-      .createHmac("sha256", config.SHA256_SECRET)
-      .update(questions.join())
-      .digest("hex");
+    const quizId = crypto.randomBytes(10).toString("hex");
 
     const duplicateQuiz = await Quiz.findOne({ quizId });
+
     if (duplicateQuiz) {
-      throw new Error("400");
+      throw new Error("500");
     }
 
     const QA = questions.map((item) => {
@@ -55,13 +52,13 @@ quizRouter.get("/:quizId", async (req, res, next) => {
   try {
     const { quizId } = req.params;
 
-    const dbResponse = await Quiz.findOne({ quizId });
+    const quiz = await Quiz.findOne({ quizId });
 
-    if (!dbResponse) {
+    if (!quiz) {
       throw new Error("404");
     }
 
-    res.status(200).json(dbResponse);
+    res.status(200).json(quiz);
   } catch (err) {
     next(err);
   }
