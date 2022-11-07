@@ -13,6 +13,15 @@ declare module "express-session" {
 
 const userRouter = express.Router();
 
+userRouter.get("/", (req, res) => {
+  if (req.session.user) {
+    const { email, username } = req.session.user;
+    res.status(200).send({ email, username });
+  } else {
+    res.status(401).send();
+  }
+});
+
 userRouter.post("/register", async (req, res, next) => {
   try {
     const { email, username, password } = req.body;
