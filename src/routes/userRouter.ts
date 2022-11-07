@@ -4,7 +4,10 @@ import bcrypt from "bcrypt";
 
 declare module "express-session" {
   interface SessionData {
-    user: string;
+    user: {
+      email: string;
+      username: string;
+    };
   }
 }
 
@@ -29,6 +32,7 @@ userRouter.post("/register", async (req, res, next) => {
 
     await newUser.save();
 
+    req.session.user = { email, username };
     res.status(201).json({ message: "created", email, username });
   } catch (err) {
     next(err);
@@ -38,17 +42,21 @@ userRouter.post("/register", async (req, res, next) => {
 userRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const exUser = await User.findOne({ email: email });
-    if (!exUser) {
+    const user = await User.findOne({ email: email });
+    if (!user) {
       throw new Error("400");
     }
-    const isValidPassword = await bcrypt.compare(password, exUser.password);
+
+    const { username, password: hashedPassword } = user;
+
+    const isValidPassword = await bcrypt.compare(password, hashedPassword);
+
     if (!isValidPassword) {
       throw new Error("400");
     }
-    req.session.user = email;
+    req.session.user = { email, username };
 
-    res.status(201).send({ email, username: exUser.username });
+    res.status(201).send({ email, username });
   } catch (err) {
     next(err);
   }

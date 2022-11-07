@@ -37,7 +37,7 @@ quizRouter.post("/", async (req, res, next) => {
 
     const newQuiz = new Quiz({
       quizId,
-      creator: req.session.user,
+      creator: req.session.user.email,
       QA,
       current_question: 0,
       active_users: [],
@@ -69,7 +69,6 @@ quizRouter.get("/:quizId", async (req, res, next) => {
 
 quizRouter.put("/:quizId", async (req, res, next) => {
   try {
-    // express에서 req schema 확인하는 방법 찾아봐야 함 : quizID가 존재하지 않는 경우
     const { quizId } = req.params;
 
     const quiz = await Quiz.findOne({ quizId });
