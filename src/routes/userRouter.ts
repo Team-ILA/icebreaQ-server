@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
+import { body, validationResult } from "express-validator";
 
 declare module "express-session" {
   interface SessionData {
@@ -22,56 +23,84 @@ userRouter.get("/", (req, res) => {
   }
 });
 
-userRouter.post("/register", async (req, res, next) => {
-  try {
-    const { email, username, password } = req.body;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const duplicateUser = await User.findOne({ email: email });
-    if (duplicateUser) {
-      throw new Error("400");
+userRouter.post(
+  "/register",
+  [
+    body("email").isString(),
+    body("username").isString(),
+    body("password").isString(),
+  ],
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).send({ errors: errors.array() });
     }
+    try {
+      const { email, username, password } = req.body;
 
-    const newUser = new User({
-      email,
-      username,
-      password: hashedPassword,
-    });
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    await newUser.save();
+      const duplicateUser = await User.findOne({ email: email });
+      if (duplicateUser) {
+        throw new Error("400");
+      }
 
-    req.session.user = { email, username };
-    res.status(201).json({ message: "created", email, username });
-  } catch (err) {
-    next(err);
-  }
-});
+      const newUser = new User({
+        email,
+        username,
+        password: hashedPassword,
+      });
 
-userRouter.post("/login", async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      throw new Error("400");
+      await newUser.save();
+
+      req.session.user = { email, username };
+      res.status(201).json({ message: "created", email, username });
+    } catch (err) {
+      next(err);
     }
+  },
+);
 
-    const { username, password: hashedPassword } = user;
-
-    const isValidPassword = await bcrypt.compare(password, hashedPassword);
-
-    if (!isValidPassword) {
-      throw new Error("400");
+userRouter.post(
+  "/login",
+  [body("email").isString(), body("password").isString()],
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).send({ errors: errors.array() });
     }
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        throw new Error("400");
+      }
 
-    const userInfo = { email, username };
+      const { username, password: hashedPassword } = user;
 
-    req.session.user = userInfo;
-    res.status(201).send(userInfo);
-  } catch (err) {
-    next(err);
-  }
-});
+      const isValidPassword = await bcrypt.compare(password, hashedPassword);
+
+      if (!isValidPassword) {
+        throw new Error("400");
+      }
+
+      const userInfo = { email, username };
+
+      req.session.user = userInfo;
+      res.status(201).send(userInfo);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 userRouter.post("/logout", (req, res) => {
   req.session.destroy((err) => {

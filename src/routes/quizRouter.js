@@ -1,6 +1,7 @@
 import express from "express";
 import Quiz from "../models/quiz";
 import crypto from "crypto";
+import { body, validationResult } from "express-validator";
 
 const quizRouter = express.Router();
 
@@ -13,42 +14,54 @@ quizRouter.use((req, res, next) => {
   }
 });
 
-quizRouter.post("/", async (req, res, next) => {
-  try {
-    const { questions, title, limit } = req.body;
-
-    const quizId = crypto.randomBytes(10).toString("hex");
-
-    const duplicateQuiz = await Quiz.findOne({ quizId });
-
-    if (duplicateQuiz) {
-      throw new Error("500");
+quizRouter.post(
+  "/",
+  [
+    body("questions").isArray(),
+    body("title").isString(),
+    body("limit").isNumeric(),
+  ],
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).send({ errors: errors.array() });
     }
+    try {
+      const { questions, title, limit } = req.body;
 
-    const QA = questions.map((item) => {
-      return {
-        question: item,
-        answer: [],
-      };
-    });
+      const quizId = crypto.randomBytes(10).toString("hex");
 
-    const newQuiz = new Quiz({
-      quizId,
-      creator: req.session.user.email,
-      QA,
-      current_question: 0,
-      active_users: [],
-      title,
-      limit,
-    });
+      const duplicateQuiz = await Quiz.findOne({ quizId });
 
-    await newQuiz.save();
+      if (duplicateQuiz) {
+        throw new Error("500");
+      }
 
-    res.status(201).json({ quizId });
-  } catch (err) {
-    next(err);
-  }
-});
+      const QA = questions.map((item) => {
+        return {
+          question: item,
+          answer: [],
+        };
+      });
+
+      const newQuiz = new Quiz({
+        quizId,
+        creator: req.session.user.email,
+        QA,
+        current_question: 0,
+        active_users: [],
+        title,
+        limit,
+      });
+
+      await newQuiz.save();
+
+      res.status(201).send({ quizId });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 quizRouter.get("/:quizId", async (req, res, next) => {
   try {
@@ -60,7 +73,7 @@ quizRouter.get("/:quizId", async (req, res, next) => {
       throw new Error("404");
     }
 
-    res.status(200).json(quiz);
+    res.status(200).send(quiz);
   } catch (err) {
     next(err);
   }
