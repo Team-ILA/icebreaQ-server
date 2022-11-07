@@ -11,4 +11,5 @@ module.exports = {
   SHA256_SECRET: process.env.SHA256_SECRET,
   SESSION_KEY: process.env.SESSION_KEY || "1234",
   ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || "",
+  MONGO_PROTOCOL: process.env.IS_MONGO_ATLAS ? "mongodb+srv" : "mongodb",
 };
