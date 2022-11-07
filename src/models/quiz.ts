@@ -8,7 +8,7 @@ const quizSchema = new mongoose.Schema({
   QA: Array,
   current_question: { type: Number, required: true },
   published_date: { type: Date, default: Date.now },
-  active_users: { type: Array, default: [] },
+  active_users: { type: Array },
   title: { type: String, required: true },
   limit: { type: Number, required: true },
 });
