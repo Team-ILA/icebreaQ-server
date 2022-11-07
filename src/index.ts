@@ -4,7 +4,16 @@ import { Server, Socket } from "socket.io";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import config, { ALLOWED_ORIGINS } from "./config";
+import {
+  ALLOWED_ORIGINS,
+  MONGO_HOST,
+  MONGO_NAME,
+  MONGO_PASSWORD,
+  MONGO_PROTOCOL,
+  MONGO_USER,
+  PORT,
+  SESSION_KEY,
+} from "./config";
 import Quiz from "./models/quiz";
 import apiRouter from "./routes/apiRouter";
 import session from "express-session";
@@ -18,8 +27,6 @@ const io = new Server(httpServer, {
   },
 });
 
-const port = config.PORT;
-
 const corsOptions = {
   origin: ALLOWED_ORIGINS.split(","),
   credentials: true,
@@ -28,7 +35,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(
   session({
-    secret: config.SESSION_KEY,
+    secret: SESSION_KEY,
     resave: false,
     saveUninitialized: false,
   }),
@@ -38,7 +45,7 @@ app.use(express.urlencoded({ extended: false }));
 
 mongoose
   .connect(
-    `mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@${config.MONGO_HOST}/${config.MONGO_NAME}`,
+    `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}/${MONGO_NAME}`,
   )
   .then(() => console.log("connection successful"))
   .catch((e) => console.error(e));
@@ -127,8 +134,9 @@ app.use((err: any, req: any, res: any, next: any) => {
   const { message } = err;
   console.error(err);
   res.status(parseInt(message)).json({ status: "error occurred" });
+  next();
 });
 
-httpServer.listen(port, () => {
-  console.log(`listening to port ${port}!`);
+httpServer.listen(PORT, () => {
+  console.log(`listening to port ${PORT}!`);
 });
