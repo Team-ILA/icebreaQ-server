@@ -10,4 +10,5 @@ module.exports = {
   MONGO_NAME: process.env.MONGO_NAME,
   SHA256_SECRET: process.env.SHA256_SECRET,
   SESSION_KEY: process.env.SESSION_KEY || "1234",
+  ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || "",
 };
