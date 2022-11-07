@@ -15,7 +15,7 @@ quizRouter.use((req, res, next) => {
 
 quizRouter.post("/", async (req, res, next) => {
   try {
-    const { questions } = req.body;
+    const { questions, title, limit } = req.body;
 
     const quizId = crypto.randomBytes(10).toString("hex");
 
@@ -38,6 +38,8 @@ quizRouter.post("/", async (req, res, next) => {
       QA,
       current_question: 0,
       active_users: [],
+      title,
+      limit,
     });
 
     await newQuiz.save();
