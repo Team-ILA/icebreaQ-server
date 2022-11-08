@@ -66,6 +66,10 @@ io.on("connection", (socket: ISocket) => {
       throw new Error("404");
     }
 
+    if (quiz.limit <= quiz.active_users.length) {
+      socket.disconnect();
+    }
+
     // quidId 값에 알맞는 room에 입장(join)
     await socket.join(quizId);
     socket.nickname = nickname;
