@@ -34,7 +34,7 @@ int logger(const string& log_level, const string& message)
                         to_string(month) + "_" +
                         to_string(day);
 
-    string file = dateFormat + fileFormat;
+    string file = "logs/" + dateFormat + fileFormat;
 
     dateFormat += "_" + to_string(hour) + ":" +
                   to_string(min) + ":" +
