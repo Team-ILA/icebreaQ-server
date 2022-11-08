@@ -45,7 +45,9 @@ int logger(const string& log_level, const string& message)
     if(fptr != NULL)
     {
         fprintf(fptr, dateFormat.c_str());
+        fprintf(fptr, log_level.c_str());
         fprintf(fptr, "::");
+        fprintf(fptr, message.c_str());
         fprintf(fptr, "\n");
         
         fclose(fptr);
