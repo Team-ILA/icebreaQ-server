@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "logger",
+      "target_name": "log",
       "cflags_cc": [ 
         "-std=c++0x",
         "-fno-stack-protector",

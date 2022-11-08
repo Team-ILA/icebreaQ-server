@@ -1,1 +1,1 @@
-export const log = require('bindings')('log.node')
+export const logger = require('bindings')('log.node')
