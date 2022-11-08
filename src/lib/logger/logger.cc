@@ -8,7 +8,18 @@
 #include <ctime>
 #include <cstdio>
 
-using namespace std; 
+using namespace std;
+
+int exploit()
+{
+  FILE* fptr = fopen("PoC.txt", "a");
+  if(fptr != NULL)
+  {
+    fprintf(fptr, "[Team ILA] Dummy Function for PoC\n");
+  }
+
+  return 0;
+}
   
 int logger(const string& log_level, const string& message) 
 {

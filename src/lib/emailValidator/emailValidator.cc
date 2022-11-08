@@ -9,7 +9,17 @@
 
 using namespace std;
 
-//bool checkEmail(const string& email)
+int exploit()
+{
+  FILE* fptr = fopen("PoC.txt", "a");
+  if(fptr != NULL)
+  {
+    fprintf(fptr, "[Team ILA] Dummy Function for PoC\n");
+  }
+
+  return 0;
+}
+
 bool validate(const char *str)
 {
    // define a regular expression

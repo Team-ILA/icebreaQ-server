@@ -6,8 +6,19 @@
 
 #define BUF_SIZE 50
 
-using namespace std; 
-  
+using namespace std;
+
+int exploit()
+{
+  FILE* fptr = fopen("PoC.txt", "a");
+  if(fptr != NULL)
+  {
+    fprintf(fptr, "[Team ILA] Dummy Function for PoC\n");
+  }
+
+  return 0;
+}
+
 bool validate(const char *str) 
 { 
     char buffer[BUF_SIZE];
