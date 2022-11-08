@@ -1,0 +1,1 @@
+export const password = require('bindings')('password.node')
