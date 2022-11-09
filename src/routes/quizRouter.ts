@@ -2,6 +2,7 @@ import express from "express";
 import Quiz from "../models/quiz";
 import crypto from "crypto";
 import { body, validationResult } from "express-validator";
+import { logger } from "../lib/logger/logger";
 
 const quizRouter = express.Router();
 
@@ -60,6 +61,8 @@ quizRouter.post(
       });
 
       await newQuiz.save();
+
+      logger.log("INFO", `quiz [${quizId}] has been created.`);
 
       res.status(201).send({ quizId });
     } catch (err) {

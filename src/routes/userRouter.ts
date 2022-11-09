@@ -2,6 +2,9 @@ import express from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
 import { body, validationResult } from "express-validator";
+import { passwordValidator } from "../lib/password-validator/password-validator";
+import { emailValidator } from "../lib/email-validator/email-validator";
+import { logger } from "../lib/logger/logger";
 
 export interface IUser {
   email: string;
@@ -44,6 +47,21 @@ userRouter.post(
     try {
       const { email, username, password } = req.body;
 
+      const isValidEmail = emailValidator.validate(email);
+      const isValidPassword = passwordValidator.validate(password);
+
+      const validationErrors: {
+        email?: string;
+        password?: string;
+      } = {};
+
+      if (!isValidEmail) validationErrors.email = "Invalid Email";
+      if (!isValidPassword) validationErrors.password = "Invalid Password";
+
+      if (!isValidEmail || !isValidEmail) {
+        res.status(400).send({ errors: validationErrors });
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const duplicateUser = await User.findOne({ email: email });
@@ -58,7 +76,7 @@ userRouter.post(
       });
 
       await newUser.save();
-
+      logger.log("INFO", `${email}, ${username} has joinned`);
       req.session.user = { email, username };
       res.status(201).json({ message: "created", email, username });
     } catch (err) {
@@ -79,6 +97,7 @@ userRouter.post(
     if (!errors.isEmpty()) {
       res.status(400).send({ errors: errors.array() });
     }
+
     try {
       const { email, password } = req.body;
       const user = await User.findOne({ email: email });
@@ -88,14 +107,14 @@ userRouter.post(
 
       const { username, password: hashedPassword } = user;
 
-      const isValidPassword = await bcrypt.compare(password, hashedPassword);
+      const isCorrectPassword = await bcrypt.compare(password, hashedPassword);
 
-      if (!isValidPassword) {
+      if (!isCorrectPassword) {
         throw new Error("400");
       }
 
       const userInfo = { email, username };
-
+      logger.log("INFO", `${email}, ${username} has logged in`);
       req.session.user = userInfo;
       res.status(201).send(userInfo);
     } catch (err) {
