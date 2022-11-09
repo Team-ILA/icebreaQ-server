@@ -63,14 +63,7 @@ interface ISocket extends Socket {
 }
 
 io.on("connection", (socket: ISocket) => {
-  socket.on("new_answer", async (data: any) => {
-    const quizId = socket.quizId;
-    const { newAnswer } = data;
-
-    if (!quizId) {
-      throw new Error("400");
-    }
-
+  socket.on("new_answer", async (answer: string, quizId: string) => {
     const quiz = await Quiz.findOne({ quizId });
 
     if (!quiz) {
@@ -84,11 +77,11 @@ io.on("connection", (socket: ISocket) => {
 
     await Quiz.updateOne(
       { quizId },
-      { $push: { [`QA.${currentQuestion}.answer`]: newAnswer } },
+      { $push: { [`QA.${currentQuestion}.answer`]: answer } },
     );
 
     io.to(quizId).emit("answer_submitted", {
-      updatedAnswer: [...quiz.QA[currentQuestion].answer, newAnswer],
+      updatedAnswer: [...quiz.QA[currentQuestion].answer, answer],
     });
   });
 
