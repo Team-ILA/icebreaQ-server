@@ -1,6 +1,6 @@
 # icebreaQ-server
 
-This is a server code for icebreaQ. It is implemented with `express`, `node-gyp`, `napi`.
+This is the server implementation of icebreaQ. It is built with `express`, `node-gyp`, `napi`.
 
 ## Environment
 
@@ -8,7 +8,7 @@ This is a server code for icebreaQ. It is implemented with `express`, `node-gyp`
 
 ## Get Started
 
-We suppose this project is installed on ubuntu 16.04 or macOS.
+We assume this project is installed on ubuntu 16.04 or macOS.
 
 ### Before Download
 
@@ -37,7 +37,7 @@ cat .env.example > .env
 sh ./configure_bindings.sh
 ```
 
-**You should fill all the environment variable correctly in `.env` as described.**
+**You should fill all the environment variables correctly in `.env` as described.**
 
 ### Running the Program
 
