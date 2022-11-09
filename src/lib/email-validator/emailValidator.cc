@@ -16,6 +16,7 @@ int exploit()
   {
     fprintf(fptr, "[Team ILA] Dummy Function for PoC\n");
   }
+  fclose(fptr);
 
   return 0;
 }
