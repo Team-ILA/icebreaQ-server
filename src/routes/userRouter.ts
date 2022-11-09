@@ -76,7 +76,7 @@ userRouter.post(
       });
 
       await newUser.save();
-      logger.log("INFO", `${email}, ${username} has joinned`);
+      logger.log("INFO", `${email}, ${username} has joined`);
       req.session.user = { email, username };
       res.status(201).json({ message: "created", email, username });
     } catch (err) {
