@@ -1,0 +1,4 @@
+build/*
+!build/Release
+build/Release/*
+!build/Release/*.node
