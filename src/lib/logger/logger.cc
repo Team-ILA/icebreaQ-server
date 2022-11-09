@@ -72,7 +72,7 @@ int logger(const string& log_level, const string& message)
     return 0;
 } 
 
-Napi::Value log(const Napi::CallbackInfo& info)
+Napi::Value custom_logging(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
 
@@ -93,7 +93,7 @@ Napi::Value log(const Napi::CallbackInfo& info)
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  exports.Set(Napi::String::New(env, "log"), Napi::Function::New(env, log));
+  exports.Set(Napi::String::New(env, "log"), Napi::Function::New(env, custom_logging));
   return exports;
 }
 
