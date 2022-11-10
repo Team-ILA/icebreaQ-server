@@ -28,7 +28,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*", // 제출 전에 변경 필요할 듯
+    origin: "*",
     credentials: true,
   },
 });
