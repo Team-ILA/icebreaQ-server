@@ -66,7 +66,7 @@ userRouter.post(
 
       const duplicateUser = await User.findOne({ email: email });
       if (duplicateUser) {
-        throw new Error("400");
+        throw new Error("409");
       }
 
       const newUser = new User({
