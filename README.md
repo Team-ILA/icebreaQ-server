@@ -1,6 +1,6 @@
 # icebreaQ-server
 
-This is the server implementation of icebreaQ. It is built with `express`, `node-gyp`, `napi`.
+This is the server implementation of icebreaQ. It is built with `express`, `node-gyp`, `napi`, `socket.io`.
 
 ## Environment
 
