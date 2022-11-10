@@ -93,6 +93,62 @@ io.on("connection", (socket: ISocket) => {
       socket.broadcast.to(quizId).emit("user_disconnected", userId);
     });
   });
+
+  socket.on("to_next_question", async (quizId: string) => {
+    console.log("to-next");
+    const quiz = await Quiz.findOne({ quizId });
+
+    if (!quiz) {
+      throw new Error("404");
+    }
+
+    const { current_question, QA } = quiz;
+    console.log(QA.length);
+
+    if (current_question + 1 >= QA.length) {
+      throw new Error("404");
+    }
+
+    await Quiz.updateOne(
+      { quizId },
+      {
+        $inc: { current_question: 1 },
+      },
+    );
+
+    const changedQuiz = await Quiz.findOne({ quizId });
+
+    socket.emit("quiz_updated", changedQuiz);
+  });
+
+  socket.on("to_prev_question", async (quizId: string) => {
+    console.log("to-prev");
+    const quiz = await Quiz.findOne({ quizId });
+
+    if (!quiz) {
+      throw new Error("404");
+    }
+
+    const { current_question } = quiz;
+
+    if (current_question <= 0) {
+      throw new Error("404");
+    }
+
+    console.log(current_question);
+
+    await Quiz.updateOne(
+      { quizId },
+      {
+        $inc: { current_question: -1 },
+      },
+    );
+    console.log(quiz.current_question);
+
+    const changedQuiz = await Quiz.findOne({ quizId });
+
+    socket.emit("quiz_updated", changedQuiz);
+  });
 });
 
 app.use((err: any, req: any, res: any, next: any) => {
