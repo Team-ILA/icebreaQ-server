@@ -58,7 +58,7 @@ userRouter.post(
       if (!isValidEmail) validationErrors.email = "Invalid Email";
       if (!isValidPassword) validationErrors.password = "Invalid Password";
 
-      if (!isValidEmail || !isValidEmail) {
+      if (!isValidEmail || !isValidPassword) {
         res.status(400).send({ errors: validationErrors });
       }
 
