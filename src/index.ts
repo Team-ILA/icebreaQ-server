@@ -118,7 +118,7 @@ io.on("connection", (socket: ISocket) => {
 
     const changedQuiz = await Quiz.findOne({ quizId });
 
-    socket.emit("quiz_updated", changedQuiz);
+    io.to(quizId).emit("quiz_updated", changedQuiz);
   });
 
   socket.on("to_prev_question", async (quizId: string) => {
@@ -147,7 +147,7 @@ io.on("connection", (socket: ISocket) => {
 
     const changedQuiz = await Quiz.findOne({ quizId });
 
-    socket.emit("quiz_updated", changedQuiz);
+    io.to(quizId).emit("quiz_updated", changedQuiz);
   });
 });
 
