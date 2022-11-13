@@ -5,6 +5,7 @@ This is the server implementation of icebreaQ. It is built with `express`, `node
 ## Environment
 
 - `node v14.20.1`
+- `mongodb-latest`
 
 ## Get Started
 
@@ -12,13 +13,18 @@ We assume this project is installed on ubuntu 16.04 or macOS.
 
 ### Before Download
 
-You should install node v14.20.1
+You should install
+
+- `node v14.20.1`
+- `mongo db`
 
 **WE RECOMMEND INSTALLING `node` VIA `nvm`**
 
 1. [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 2. `nvm install 14`
 3. `nvm use 14`
+
+[Install & Run mongodb](https://www.mongodb.com/docs/manual/administration/install-community/)
 
 ### Download and Configuration
 
