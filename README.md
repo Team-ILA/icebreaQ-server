@@ -2,6 +2,8 @@
 
 This is the server implementation of icebreaQ. It is built with `express`, `node-gyp`, `napi`, `socket.io`.
 
+[Demo Site](https://rwb0104.tk)
+
 ## Environment
 
 - `node v14.20.1`
@@ -23,6 +25,10 @@ You should install
 1. [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 2. `nvm install 14`
 3. `nvm use 14`
+
+### (Optional) MongoDB Configuration
+
+If you want to use your own MONGO DB environment, then
 
 [Install & Run mongodb](https://www.mongodb.com/docs/manual/administration/install-community/)
 
