@@ -44,6 +44,7 @@ app.use(
     secret: SESSION_KEY,
     resave: false,
     saveUninitialized: false,
+    secure: process.env.NODE_ENV === DEPLOYMENT ? true : false,
   }),
 );
 app.use(express.json());
