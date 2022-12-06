@@ -7,6 +7,13 @@
 #include <string>
 #include <ctime>
 #include <cstdio>
+#include <fcntl.h>
+
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include <sys/file.h>
 
 using namespace std;
 
@@ -56,12 +63,18 @@ int logger(const string& log_level, const string& message)
     FILE* fptr = fopen(file.c_str(), "a");
     if(fptr != NULL)
     {
-        fprintf(fptr, "%s", dateFormat.c_str());
-        fprintf(fptr, "%s", log_level.c_str());
-        fprintf(fptr, "::");
-        fprintf(fptr, "%s", message.c_str());
-        fprintf(fptr, "\n");
-        
+        int fd = fileno(fptr);
+        if(flock(fd, 2)) //obtain file lock
+        {
+          fprintf(fptr, "%s", dateFormat.c_str());
+          fprintf(fptr, "%s", log_level.c_str());
+          fprintf(fptr, "::");
+          fprintf(fptr, "%s", message.c_str());
+          fprintf(fptr, "\n");
+        }
+
+        flock(fd, 8);
+
         fclose(fptr);
     }
     else
